@@ -240,7 +240,7 @@ COPY_OPTIONS (
 {%- set s3_bucket = var("tuva_seeds_s3_bucket", uri.split("/")[0]) -%}
 {%- set s3_key = uri.split("/")[1:]|join("/") + "/" + pattern + "_0.csv.gz" -%}
 {%- if var("tuva_seeds_s3_key_prefix", "") != "" -%}
-{%- do s3_key = var("tuva_seeds_s3_key_prefix") + "/" + s3_key -%}
+{%- set s3_key = var("tuva_seeds_s3_key_prefix") + "/" + s3_key -%}
 {%- endif -%}
 {%- set s3_region = "us-east-1" -%}
 {%- set options = ["(", "format csv", ", encoding ''utf8''"] -%}
