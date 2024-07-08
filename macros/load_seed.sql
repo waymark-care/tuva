@@ -237,8 +237,11 @@ COPY_OPTIONS (
 {%- endfor -%}
 {%- set cols = collist|join(",") -%}
 
-{%- set s3_bucket = uri.split("/")[0] -%}
-{%- set s3_key = uri.split("/")[1:]|join("/") + "/" + pattern + "_0_0_0.csv.gz" -%}
+{%- set s3_bucket = var("tuva_seeds_s3_bucket", uri.split("/")[0]) -%}
+{%- set s3_key = uri.split("/")[1:]|join("/") + "/" + pattern + "_0.csv.gz" -%}
+{%- if var("tuva_seeds_s3_key_prefix", "") != "" -%}
+{%- do s3_key = var("tuva_seeds_s3_key_prefix") + "/" + s3_key -%}
+{%- endif -%}
 {%- set s3_region = "us-east-1" -%}
 {%- set options = ["(", "format csv", ", encoding ''utf8''"] -%}
 {%- do options.append(", null ''\\N''") if null_marker == true -%}
@@ -250,8 +253,7 @@ SELECT aws_s3.table_import_from_s3(
    '{{ this }}',
    '{{ cols }}',
    '{{ options_s }}',
-   aws_commons.create_s3_uri('{{s3_bucket}}', '{{s3_key}}', '{{s3_region}}'),
-   aws_commons.create_aws_credentials('AKIA2EPVNTV4FLAEBFGE', 'TARgblERrFP81Op+52KZW7HrP1Om6ObEDQAUVN2u', '')
+   aws_commons.create_s3_uri('{{s3_bucket}}', '{{s3_key}}', '{{s3_region}}')
 )
 {% endset %}
 
