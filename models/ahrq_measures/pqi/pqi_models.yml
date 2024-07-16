@@ -251,7 +251,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -267,7 +267,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -283,7 +283,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -299,7 +299,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -315,7 +315,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -331,7 +331,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -347,7 +347,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -363,7 +363,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -380,7 +380,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -396,7 +396,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -412,7 +412,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -428,7 +428,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -444,7 +444,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -460,7 +460,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -476,7 +476,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -492,7 +492,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -508,7 +508,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -524,7 +524,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -540,7 +540,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -556,7 +556,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -572,7 +572,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -588,7 +588,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -604,7 +604,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -620,7 +620,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -636,7 +636,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -652,7 +652,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
@@ -668,7 +668,7 @@ models:
     config:
       schema: |
         {%- if var('tuva_schema_prefix', None) != None -%}
-          {var('tuva_schema_prefix')}_ahrq_measures
+          {{var('tuva_schema_prefix')}}_ahrq_measures
         {% else %}
           ahrq_measures
         {%- endif -%}
