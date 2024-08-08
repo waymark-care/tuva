@@ -1,5 +1,5 @@
 {{ config(
-    enabled = var('pqi_enabled', var('claims_enabled', var('tuva_marts_enabled', False))) | as_bool
+    enabled = var('brand_generic_enabled', var('claims_enabled', var('tuva_marts_enabled', False))) | as_bool
 ) }}
 
 select 
@@ -13,8 +13,8 @@ select
   , p.claim_line_number
   , p.patient_id
   , p.member_id
-  , p.prescribing_provider_npi
-  , p.dispensing_provider_npi
+  , p.prescribing_provider_id
+  , p.dispensing_provider_id
   , p.dispensing_date
   , p.quantity
   , p.days_supply

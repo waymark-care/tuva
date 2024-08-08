@@ -84,6 +84,11 @@ copy  {{ this }}
 
 {% endmacro %}
 
+{% macro athena__load_seed(uri, pattern, compression, headers, null_marker) %}
+  {% if execute %}
+    {% do adapter.load_tuva_seed(this, uri, pattern, compression, headers, null_marker) %}
+  {% endif %}
+{% endmacro %}
 
 
 {% macro snowflake__load_seed(uri,pattern,compression,headers,null_marker) %}
@@ -174,8 +179,8 @@ FROM (
   {% if env_var('AWS_SESSION_TOKEN', False) %}
   WITH (
     CREDENTIAL (
-      AWS_ACCESS_KEY = "{{ env_var('AWS_ACCESS_KEY') }}",
-      AWS_SECRET_KEY = "{{ env_var('AWS_SECRET_KEY') }}",
+      AWS_ACCESS_KEY = "{{ env_var('AWS_ACCESS_KEY_ID') }}",
+      AWS_SECRET_KEY = "{{ env_var('AWS_SECRET_ACCESS_KEY') }}",
       AWS_SESSION_TOKEN = "{{ env_var('AWS_SESSION_TOKEN') }}"
     )
   )
@@ -186,9 +191,11 @@ PATTERN = '{{ pattern }}*'
 FORMAT_OPTIONS (
   {% if headers == true %} 'skipRows' = '1', {% else %} 'skipRows' = '0', {% endif %}
   {% if null_marker == true %} 'nullValue' = '\\N', {% else %} {% endif %}
-  'enforceSchema' = 'true',
+  'enforceSchema' = 'false',
   'inferSchema' = 'false',
-  'sep' = ','
+  'sep' = ',',
+  'escape' = "\"",
+  'multiline' = 'true'
 )
 COPY_OPTIONS (
   'mergeSchema' = 'false',
@@ -222,11 +229,12 @@ COPY_OPTIONS (
 
 
 
--- postgres - note this requires some pre-work on your part you need to clone
+-- postgres - note this requires some pre-work on your part -  you need to clone
 -- the data from the tuva public resource bucket to re-assemble it into a single
--- file per seed - also ensure you've set the Content-Type system header on each
--- to be gzip (https://stackoverflow.com/a/74439053) otherwise the extension
--- won't know to decompress it.
+-- file per seed with quoted null's unquoted - also ensure you've set the
+-- Content-Type system header on each to be gzip
+-- (https://stackoverflow.com/a/74439053) otherwise the extension won't know to
+-- decompress it.
 --
 -- TODO: revisit removing column list, I think it'll work fine with '' for cols
 {% macro postgres__load_seed(uri,pattern,compression,headers,null_marker) %}

@@ -120,7 +120,7 @@ where condition = 'Ulcerative colitis'
 chrohns as (
 select distinct patient_id
 from {{ ref('chronic_conditions__tuva_chronic_conditions_long')  }}
-where condition = {{ dbt.string_literal(escape_quotes("Chrohn's Disease")) }}
+where condition = 'Crohns Disease'
 ),
 
 holicobacter as (
@@ -331,7 +331,7 @@ select
   end as immunodeficiencies_and_white_blood_cell_disorders,
   case when patient_id in (select * from asthma) then 1
        else 0
-  end as asthma,
+  end asthma,
   case when patient_id in (select * from t1d) then 1
        else 0
   end as t1d,
