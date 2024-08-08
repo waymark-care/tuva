@@ -236,15 +236,12 @@ COPY_OPTIONS (
 -- (https://stackoverflow.com/a/74439053) otherwise the extension won't know to
 -- decompress it.
 --
--- TODO: revisit removing column list, I think it'll work fine with '' for cols
 {% macro postgres__load_seed(uri,pattern,compression,headers,null_marker) %}
-{%- set columns = adapter.get_columns_in_relation(this) -%}
-{%- set collist = [] -%}
-{%- for col in columns -%}
-  {%- do collist.append(col.name) -%}
-{%- endfor -%}
-{%- set cols = collist|join(",") -%}
-
+{# We are not calculating the list of columns because the default behavior #}
+{# in postgres is to load the columns from the csv into corresponding columns #}
+{# in the target table - which should be the case for these csv. It also lets #}
+{# us get out of having to quote column names, etc. #}
+{%- set cols = "" -%}
 {%- set s3_bucket = var("tuva_seeds_s3_bucket", uri.split("/")[0]) -%}
 {%- set s3_key = uri.split("/")[1:]|join("/") + "/" + pattern + "_0.csv.gz" -%}
 {%- if var("tuva_seeds_s3_key_prefix", "") != "" -%}
