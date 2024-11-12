@@ -333,3 +333,4 @@ select
     , exclusion_flag
     , '{{ var('tuva_last_run') }}' as tuva_last_run
 from add_data_types
+where False
