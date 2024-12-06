@@ -50,7 +50,7 @@ select distinct
 from {{ ref('service_category__stg_medical_claim') }} a
 inner join room_and_board_requirement b
   on a.claim_id = b.claim_id
-inner join drg_requirement c
-  on a.claim_id = c.claim_id
+-- inner join drg_requirement c
+--   on a.claim_id = c.claim_id
 inner join bill_type_requirement d
   on a.claim_id = d.claim_id
