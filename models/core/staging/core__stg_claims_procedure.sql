@@ -15,11 +15,7 @@ select
     claim_id as claim_id
   , patient_id as patient_id
   , claim_line_number as proc_seq_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
-           , claim_end_date
-    ) as procedure_date
+  , claim_line_start_date as procedure_date
   , 'hcpcs' as source_code_type
   , hcpcs_code as source_code
   , rendering_npi as practitioner_npi
