@@ -9,14 +9,29 @@
 -- This dbt model creates the condition table in core.
 -- *************************************************
 
-with unpivot_cte as (
+with distinct_dx as (
+
+select distinct
+    claim_id
+    , patient_id
+    , diagnosis_code_type
+    , claim_start_date
+    , claim_end_date
+    , data_source
+    {% for i in range(1, 26) %}
+      , diagnosis_code_{{ i }}
+      , diagnosis_poa_{{ i }}
+    {% endfor %}
+from  {{ ref('normalized_input__medical_claim') }}
+
+),
+
+unpivot_cte as (
 
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -25,7 +40,7 @@ select
   , 1 as diagnosis_rank
   , diagnosis_poa_1 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }} 
+from distinct_dx 
 where diagnosis_code_1 is not null
 
 union all 
@@ -33,10 +48,8 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-	       , discharge_date
-	       , claim_end_date
+  , coalesce(claim_start_date
+           , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
   , diagnosis_code_type as source_code_type
@@ -44,7 +57,7 @@ select
   , 2 as diagnosis_rank
   , diagnosis_poa_2 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_2 is not null
 
 union all 
@@ -52,9 +65,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -63,7 +74,7 @@ select
   , 3 as diagnosis_rank
   , diagnosis_poa_3 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_3 is not null
 
 union all 
@@ -71,9 +82,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -82,7 +91,7 @@ select
   , 4 as diagnosis_rank
   , diagnosis_poa_4 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_4 is not null
 
 union all 
@@ -90,9 +99,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -101,7 +108,7 @@ select
   , 5 as diagnosis_rank
   , diagnosis_poa_5 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_5 is not null
 
 union all 
@@ -109,9 +116,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -120,7 +125,7 @@ select
   , 6 as diagnosis_rank
   , diagnosis_poa_6 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_6 is not null
 
 union all 
@@ -128,9 +133,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -139,7 +142,7 @@ select
   , 7 as diagnosis_rank
   , diagnosis_poa_7 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_7 is not null
 
 union all 
@@ -147,9 +150,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -158,7 +159,7 @@ select
   , 8 as diagnosis_rank
   , diagnosis_poa_8 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_8 is not null
 
 union all 
@@ -166,9 +167,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -177,7 +176,7 @@ select
   , 9 as diagnosis_rank
   , diagnosis_poa_9 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_9 is not null
 
 union all 
@@ -185,9 +184,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -196,7 +193,7 @@ select
   , 10 as diagnosis_rank
   , diagnosis_poa_10 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_10 is not null
 
 union all 
@@ -204,9 +201,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -215,7 +210,7 @@ select
   , 11 as diagnosis_rank
   , diagnosis_poa_11 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_11 is not null
 
 union all 
@@ -223,9 +218,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -234,7 +227,7 @@ select
   , 12 as diagnosis_rank
   , diagnosis_poa_12 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_12 is not null
 
 union all 
@@ -242,9 +235,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -253,7 +244,7 @@ select
   , 13 as diagnosis_rank
   , diagnosis_poa_13 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_13 is not null
 
 union all 
@@ -261,9 +252,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -272,7 +261,7 @@ select
   , 14 as diagnosis_rank
   , diagnosis_poa_14 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_14 is not null
 
 union all 
@@ -280,9 +269,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -291,7 +278,7 @@ select
   , 15 as diagnosis_rank
   , diagnosis_poa_15 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_15 is not null
 
 union all 
@@ -299,9 +286,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -310,7 +295,7 @@ select
   , 16 as diagnosis_rank
   , diagnosis_poa_16 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_16 is not null
 
 union all 
@@ -318,9 +303,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -329,7 +312,7 @@ select
   , 17 as diagnosis_rank
   , diagnosis_poa_17 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_17 is not null
 
 union all 
@@ -337,9 +320,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -348,7 +329,7 @@ select
   , 18 as diagnosis_rank
   , diagnosis_poa_18 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_18 is not null
 
 union all 
@@ -356,9 +337,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -367,7 +346,7 @@ select
   , 19 as diagnosis_rank
   , diagnosis_poa_19 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_19 is not null
 
 union all 
@@ -375,9 +354,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -386,7 +363,7 @@ select
   , 20 as diagnosis_rank
   , diagnosis_poa_20 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_20 is not null
 
 union all 
@@ -394,9 +371,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -405,7 +380,7 @@ select
   , 21 as diagnosis_rank
   , diagnosis_poa_21 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_21 is not null
 
 union all 
@@ -413,9 +388,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -424,7 +397,7 @@ select
   , 22 as diagnosis_rank
   , diagnosis_poa_22 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_22 is not null
 
 union all 
@@ -432,9 +405,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -443,7 +414,7 @@ select
   , 23 as diagnosis_rank
   , diagnosis_poa_23 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_23 is not null
 
 union all 
@@ -451,9 +422,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -462,7 +431,7 @@ select
   , 24 as diagnosis_rank
   , diagnosis_poa_24 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_24 is not null
 
 union all 
@@ -470,9 +439,7 @@ union all
 select
     claim_id
   , patient_id
-  , coalesce(admission_date
-           , claim_start_date
-           , discharge_date
+  , coalesce(claim_start_date
            , claim_end_date
     ) as recorded_date
   , 'discharge_diagnosis' as condition_type
@@ -481,7 +448,7 @@ select
   , 25 as diagnosis_rank
   , diagnosis_poa_25 as present_on_admit_code
   , data_source
-from {{ ref('normalized_input__medical_claim') }}
+from distinct_dx
 where diagnosis_code_25 is not null
 
 )
