@@ -317,7 +317,7 @@ pivot_diagnosis as(
 
 select
     claim_id
-    , data_source
+    , piv.data_source
     , diagnosis_code_type
     , diagnosis_column
     , coalesce(icd_9.icd_9_cm,icd_10.icd_10_cm) as normalized_diagnosis_code
@@ -333,7 +333,7 @@ left join {{ ref('terminology__icd_9_cm') }} icd_9
 where claim_type <> 'undetermined'
 group by 
     claim_id
-    , data_source
+    , piv.data_source
     , diagnosis_code_type
     , diagnosis_column
     , coalesce(icd_9.icd_9_cm,icd_10.icd_10_cm)
