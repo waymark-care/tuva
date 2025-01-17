@@ -15,7 +15,7 @@ select distinct
     {% for i in range(1, 26) %}
       , diagnosis_poa_{{ i }}
     {% endfor %}
-from  {{x ref('normalized_input__stg_medical_claim') }}
+from  {{ ref('normalized_input__stg_medical_claim') }}
 
 ),
 
