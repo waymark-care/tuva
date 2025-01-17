@@ -5,7 +5,26 @@
 }}
 
 
-with pivot_procedure as(
+with distinct_proc as (
+
+select distinct
+        claim_id
+        , claim_type
+        , data_source
+        , procedure_code_type
+    , data_source
+    {% for i in range(1, 26) %}
+      , procedure_code_{{ i }}
+    {% endfor %}
+from  {{ ref('normalized_input__stg_medical_claim') }}
+
+),
+
+
+
+
+
+pivot_procedure as(
     select
         claim_id
         , claim_type
@@ -13,7 +32,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_1'  as procedure_column
         ,  procedure_code_1  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -25,7 +44,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_2'  as procedure_column
         ,  procedure_code_2  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
     union all
 
@@ -36,7 +55,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_3'  as procedure_column
         ,  procedure_code_3  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -48,7 +67,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_4'  as procedure_column
         ,  procedure_code_4  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -60,7 +79,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_5'  as procedure_column
         ,  procedure_code_5  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -72,7 +91,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_6'  as procedure_column
         ,  procedure_code_6  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -84,7 +103,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_7'  as procedure_column
         ,  procedure_code_7  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -96,7 +115,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_8'  as procedure_column
         ,  procedure_code_8  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -108,7 +127,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_9'  as procedure_column
         ,  procedure_code_9  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -120,7 +139,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_10'  as procedure_column
         ,  procedure_code_10  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -132,7 +151,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_11'  as procedure_column
         ,  procedure_code_11  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -144,7 +163,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_12'  as procedure_column
         ,  procedure_code_12  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -156,7 +175,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_13'  as procedure_column
         ,  procedure_code_13  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
     union all
 
@@ -167,7 +186,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_14'  as procedure_column
         ,  procedure_code_14  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -179,7 +198,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_15'  as procedure_column
         ,  procedure_code_15  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -191,7 +210,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_16'  as procedure_column
         ,  procedure_code_16  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -203,7 +222,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_17'  as procedure_column
         ,  procedure_code_17  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -215,7 +234,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_18'  as procedure_column
         ,  procedure_code_18  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -227,7 +246,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_19'  as procedure_column
         ,  procedure_code_19  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -239,7 +258,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_20'  as procedure_column
         ,  procedure_code_20  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -251,7 +270,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_21'  as procedure_column
         ,  procedure_code_21  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
     union all
 
@@ -262,7 +281,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_22'  as procedure_column
         ,  procedure_code_22  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
 
     union all
@@ -274,7 +293,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_23'  as procedure_column
         ,  procedure_code_23  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
     union all
 
@@ -285,7 +304,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_24'  as procedure_column
         ,  procedure_code_24  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 
     union all
 
@@ -296,7 +315,7 @@ with pivot_procedure as(
         , procedure_code_type
         , 'procedure_code_25'  as procedure_column
         ,  procedure_code_25  as procedure_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_proc
 )
 
 select
