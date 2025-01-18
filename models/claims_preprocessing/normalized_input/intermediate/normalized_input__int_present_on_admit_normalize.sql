@@ -11,7 +11,6 @@ select distinct
         claim_id
         , claim_type
         , data_source
-    , data_source
     {% for i in range(1, 26) %}
       , diagnosis_poa_{{ i }}
     {% endfor %}

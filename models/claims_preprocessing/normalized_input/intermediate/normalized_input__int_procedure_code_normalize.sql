@@ -12,7 +12,6 @@ select distinct
         , claim_type
         , data_source
         , procedure_code_type
-    , data_source
     {% for i in range(1, 26) %}
       , procedure_code_{{ i }}
     {% endfor %}
