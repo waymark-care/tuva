@@ -1,10 +1,26 @@
 {{ config(
-     enabled = var('claims_preprocessing_enabled',var('claims_enabled',var('tuva_marts_enabled',False))) | as_bool
+     enabled = var('claims_preprocessing_enabled',var('claims_enabled',var('tuva_marts_enabled',False)))
+ | as_bool
    )
 }}
 
 
-with pivot_diagnosis as(
+with distinct_dx as (
+
+select distinct
+        claim_id
+        , claim_type
+        , data_source
+        , diagnosis_code_type
+    {% for i in range(1, 26) %}
+      , diagnosis_code_{{ i }}
+    {% endfor %}
+from  {{ ref('normalized_input__stg_medical_claim') }}
+
+),
+
+
+pivot_diagnosis as(
     select
         claim_id
         , claim_type
@@ -12,7 +28,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_1'  as diagnosis_column
         ,  diagnosis_code_1  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -24,7 +40,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_2'  as diagnosis_column
         ,  diagnosis_code_2  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
     union all
 
@@ -35,7 +51,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_3'  as diagnosis_column
         ,  diagnosis_code_3  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -47,7 +63,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_4'  as diagnosis_column
         ,  diagnosis_code_4  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -59,7 +75,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_5'  as diagnosis_column
         ,  diagnosis_code_5  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -71,7 +87,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_6'  as diagnosis_column
         ,  diagnosis_code_6  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -83,7 +99,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_7'  as diagnosis_column
         ,  diagnosis_code_7  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -95,7 +111,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_8'  as diagnosis_column
         ,  diagnosis_code_8  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -107,7 +123,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_9'  as diagnosis_column
         ,  diagnosis_code_9  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -119,7 +135,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_10'  as diagnosis_column
         ,  diagnosis_code_10  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -131,7 +147,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_11'  as diagnosis_column
         ,  diagnosis_code_11  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -143,7 +159,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_12'  as diagnosis_column
         ,  diagnosis_code_12  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -155,7 +171,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_13'  as diagnosis_column
         ,  diagnosis_code_13  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
     union all
 
@@ -166,7 +182,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_14'  as diagnosis_column
         ,  diagnosis_code_14  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -178,7 +194,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_15'  as diagnosis_column
         ,  diagnosis_code_15  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -190,7 +206,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_16'  as diagnosis_column
         ,  diagnosis_code_16  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -202,7 +218,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_17'  as diagnosis_column
         ,  diagnosis_code_17  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -214,7 +230,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_18'  as diagnosis_column
         ,  diagnosis_code_18  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -226,7 +242,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_19'  as diagnosis_column
         ,  diagnosis_code_19  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -238,7 +254,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_20'  as diagnosis_column
         ,  diagnosis_code_20  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -250,7 +266,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_21'  as diagnosis_column
         ,  diagnosis_code_21  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
     union all
 
@@ -261,7 +277,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_22'  as diagnosis_column
         ,  diagnosis_code_22  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
 
     union all
@@ -273,7 +289,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_23'  as diagnosis_column
         ,  diagnosis_code_24  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
     union all
 
@@ -284,7 +300,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_24'  as diagnosis_column
         ,  diagnosis_code_24  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 
     union all
 
@@ -295,7 +311,7 @@ with pivot_diagnosis as(
         , diagnosis_code_type
         , 'diagnosis_code_25'  as diagnosis_column
         ,  diagnosis_code_25  as diagnosis_code
-    from {{ ref('normalized_input__stg_medical_claim') }}
+    from distinct_dx
 )
 
 select
