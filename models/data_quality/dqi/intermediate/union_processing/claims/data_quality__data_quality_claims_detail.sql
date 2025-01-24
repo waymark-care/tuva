@@ -1464,7 +1464,7 @@ with
 
     ),
 
-    professional_cte_1 as (
+    professional_cte as (
 
         select
             cast(data_source as {{ dbt.type_string() }}) as data_source,
@@ -1610,14 +1610,15 @@ with
 
     ),
 
-    unioned_cte as (
-
+    claim_cte as (
         select *
         from claim_cte_1
         union all
         select *
         from claim_cte_2
-        union all
+    ),
+
+    eligibility_cte as (
         select *
         from eligibility_cte_1
         union all
@@ -1626,7 +1627,9 @@ with
         union all
 		select *
 		from eligibility_cte_3
-		union all
+    ),
+
+    institutional_cte as (
         select *
         from institutional_cte_1
         union all
@@ -1635,15 +1638,32 @@ with
         union all
         select *
         from institutional_cte_3
-        union all
+    ),
+
+    pharmacy_cte as (
         select *
         from pharmacy_cte_1
         union all
         select *
         from pharmacy_cte_2
+    ),
+
+    unioned_cte as (
+
+        select *
+        from claim_cte
+        union all
+		select *
+		from eligibility_cte
+		union all
+        select *
+        from institutional_cte
         union all
         select *
-        from professional_cte_1
+        from pharmacy_cte
+        union all
+        select *
+        from professional_cte
 
     )
 
