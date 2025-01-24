@@ -3,672 +3,888 @@
    )
 }}
 
-WITH CTE as (
-SELECT * FROM {{ ref('data_quality__condition_claim_id') }}
+WITH
+    condition_cte as (
+        select *
+        from {{ ref("data_quality__condition_claim_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_condition_id') }}
+        select *
+        from {{ ref("data_quality__condition_condition_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_condition_rank') }}
+        select *
+        from {{ ref("data_quality__condition_condition_rank") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_condition_type') }}
+        select *
+        from {{ ref("data_quality__condition_condition_type") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_data_source') }}
+        select *
+        from {{ ref("data_quality__condition_data_source") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_encounter_id') }}
+        select *
+        from {{ ref("data_quality__condition_encounter_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_normalized_code_type') }}
+        select *
+        from {{ ref("data_quality__condition_normalized_code_type") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_normalized_code') }}
+        select *
+        from {{ ref("data_quality__condition_normalized_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_normalized_description') }}
+        select *
+        from {{ ref("data_quality__condition_normalized_description") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_onset_date') }}
+        select *
+        from {{ ref("data_quality__condition_onset_date") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_patient_id') }}
+        select *
+        from {{ ref("data_quality__condition_patient_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_present_on_admit_code') }}
+        select *
+        from {{ ref("data_quality__condition_present_on_admit_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_present_on_admit_description') }}
+        select *
+        from {{ ref("data_quality__condition_present_on_admit_description") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_recorded_date') }}
+        select *
+        from {{ ref("data_quality__condition_recorded_date") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_resolved_date') }}
+        select *
+        from {{ ref("data_quality__condition_resolved_date") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_source_code') }}
+        select *
+        from {{ ref("data_quality__condition_source_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_source_code_type') }}
+        select *
+        from {{ ref("data_quality__condition_source_code_type") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_source_description') }}
+        select *
+        from {{ ref("data_quality__condition_source_description") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__condition_status') }}
+        select *
+        from {{ ref("data_quality__condition_status") }}
 
-union all
+    ),
 
-SELECT * FROM {{ ref('data_quality__encounter_admit_source_code') }}
+    encounter_cte as (
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_admit_source_code") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_admit_source_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_admit_source_description") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_admit_type_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_admit_type_code") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_admit_type_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_admit_type_description") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_allowed_amount') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_allowed_amount") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_apr_drg_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_apr_drg_code") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_apr_drg_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_apr_drg_description") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_attending_provider_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_attending_provider_id") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_charge_amount') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_charge_amount") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_data_source') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_data_source") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_discharge_disposition_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_discharge_disposition_code") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_discharge_disposition_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_discharge_disposition_description") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_encounter_end_date') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_encounter_end_date") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_encounter_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_encounter_id") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_encounter_start_date') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_encounter_start_date") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_encounter_type') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_encounter_type") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_facility_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_facility_id") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_length_of_stay') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_length_of_stay") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_ms_drg_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_ms_drg_code") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_ms_drg_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_ms_drg_description") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_paid_amount') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_paid_amount") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_patient_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_patient_id") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_primary_diagnosis_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_primary_diagnosis_code") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_primary_diagnosis_code_type') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_primary_diagnosis_code_type") }}
 
-SELECT * FROM {{ ref('data_quality__encounter_primary_diagnosis_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__encounter_primary_diagnosis_description") }}
 
-SELECT * FROM {{ ref('data_quality__practitioner_practice_affiliation') }}
+    ),
 
-union all
+    practitioner_cte as (
 
-SELECT * FROM {{ ref('data_quality__practitioner_sub_specialty') }}
+        select *
+        from {{ ref("data_quality__practitioner_practice_affiliation") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__practitioner_last_name') }}
+        select *
+        from {{ ref("data_quality__practitioner_sub_specialty") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__practitioner_practitioner_id') }}
+        select *
+        from {{ ref("data_quality__practitioner_last_name") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__practitioner_data_source') }}
+        select *
+        from {{ ref("data_quality__practitioner_practitioner_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__practitioner_npi') }}
+        select *
+        from {{ ref("data_quality__practitioner_data_source") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__practitioner_first_name') }}
+        select *
+        from {{ ref("data_quality__practitioner_npi") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__practitioner_specialty') }}
+        select *
+        from {{ ref("data_quality__practitioner_first_name") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__location_parent_organization') }}
+        select *
+        from {{ ref("data_quality__practitioner_specialty") }}
 
-union all
+    ),
 
-SELECT * FROM {{ ref('data_quality__location_latitude') }}
+    location_cte as (
 
-union all
+        select *
+        from {{ ref("data_quality__location_parent_organization") }}
 
-SELECT * FROM {{ ref('data_quality__location_facility_type') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_latitude") }}
 
-SELECT * FROM {{ ref('data_quality__location_zip_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_facility_type") }}
 
-SELECT * FROM {{ ref('data_quality__location_data_source') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_zip_code") }}
 
-SELECT * FROM {{ ref('data_quality__location_city') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_data_source") }}
 
-SELECT * FROM {{ ref('data_quality__location_npi') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_city") }}
 
-SELECT * FROM {{ ref('data_quality__location_location_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_npi") }}
 
-SELECT * FROM {{ ref('data_quality__location_longitude') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_location_id") }}
 
-SELECT * FROM {{ ref('data_quality__location_address') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_longitude") }}
 
-SELECT * FROM {{ ref('data_quality__location_state') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_address") }}
 
-SELECT * FROM {{ ref('data_quality__location_name') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_state") }}
 
-SELECT * FROM {{ ref('data_quality__procedure_normalized_code_type') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__location_name") }}
 
-SELECT * FROM {{ ref('data_quality__procedure_normalized_description') }}
+    ),
 
-union all
+    procedure_cte as (
 
-SELECT * FROM {{ ref('data_quality__procedure_procedure_id') }}
+        select *
+        from {{ ref("data_quality__procedure_normalized_code_type") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_claim_id') }}
+        select *
+        from {{ ref("data_quality__procedure_normalized_description") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_source_code') }}
+        select *
+        from {{ ref("data_quality__procedure_procedure_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_source_code_type') }}
+        select *
+        from {{ ref("data_quality__procedure_claim_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_source_description') }}
+        select *
+        from {{ ref("data_quality__procedure_source_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_practitioner_id') }}
+        select *
+        from {{ ref("data_quality__procedure_source_code_type") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_data_source') }}
+        select *
+        from {{ ref("data_quality__procedure_source_description") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_patient_id') }}
+        select *
+        from {{ ref("data_quality__procedure_practitioner_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_procedure_date') }}
+        select *
+        from {{ ref("data_quality__procedure_data_source") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_encounter_id') }}
+        select *
+        from {{ ref("data_quality__procedure_patient_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_modifier_5') }}
+        select *
+        from {{ ref("data_quality__procedure_procedure_date") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_modifier_4') }}
+        select *
+        from {{ ref("data_quality__procedure_encounter_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_normalized_code') }}
+        select *
+        from {{ ref("data_quality__procedure_modifier_5") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_modifier_1') }}
+        select *
+        from {{ ref("data_quality__procedure_modifier_4") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_modifier_3') }}
+        select *
+        from {{ ref("data_quality__procedure_normalized_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__procedure_modifier_2') }}
+        select *
+        from {{ ref("data_quality__procedure_modifier_1") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_abnormal_flag') }}
+        select *
+        from {{ ref("data_quality__procedure_modifier_3") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__lab_result_specimen') }}
+        select *
+        from {{ ref("data_quality__procedure_modifier_2") }}
 
-union all
+    ),
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_reference_range_low') }}
+    lab_result_cte as (
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_abnormal_flag") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_units') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_specimen") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_lab_result_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_reference_range_low") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_collection_date') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_units") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_component') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_lab_result_id") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_ordering_practitioner_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_collection_date") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_result') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_component") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_code_type') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_ordering_practitioner_id") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_result") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_reference_range_low') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_code_type") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_reference_range_high') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_description") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_reference_range_low") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_reference_range_high") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_status') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_code") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_accession_number') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_description") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_result_date') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_status") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_abnormal_flag') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_accession_number") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_data_source') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_result_date") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_units') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_abnormal_flag") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_normalized_code_type') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_data_source") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_reference_range_high') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_units") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_normalized_code_type") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_patient_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_reference_range_high") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_source_component') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_code") }}
 
-SELECT * FROM {{ ref('data_quality__lab_result_encounter_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_patient_id") }}
 
-SELECT * FROM {{ ref('data_quality__patient_sex') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_source_component") }}
 
-SELECT * FROM {{ ref('data_quality__patient_state') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__lab_result_encounter_id") }}
 
-SELECT * FROM {{ ref('data_quality__patient_city') }}
+    ),
 
-union all
+    patient_cte as (
 
-SELECT * FROM {{ ref('data_quality__patient_longitude') }}
+        select *
+        from {{ ref("data_quality__patient_sex") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_county') }}
+        select *
+        from {{ ref("data_quality__patient_state") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_race') }}
+        select *
+        from {{ ref("data_quality__patient_city") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_death_flag') }}
+        select *
+        from {{ ref("data_quality__patient_longitude") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_address') }}
+        select *
+        from {{ ref("data_quality__patient_county") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_data_source') }}
+        select *
+        from {{ ref("data_quality__patient_race") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_zip_code') }}
+        select *
+        from {{ ref("data_quality__patient_death_flag") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_first_name') }}
+        select *
+        from {{ ref("data_quality__patient_address") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_last_name') }}
+        select *
+        from {{ ref("data_quality__patient_data_source") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_latitude') }}
+        select *
+        from {{ ref("data_quality__patient_zip_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_birth_date') }}
+        select *
+        from {{ ref("data_quality__patient_first_name") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_death_date') }}
+        select *
+        from {{ ref("data_quality__patient_last_name") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__patient_patient_id') }}
+        select *
+        from {{ ref("data_quality__patient_latitude") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__medication_rxnorm_code') }}
+        select *
+        from {{ ref("data_quality__patient_birth_date") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__medication_source_code') }}
+        select *
+        from {{ ref("data_quality__patient_death_date") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__medication_atc_code') }}
+        select *
+        from {{ ref("data_quality__patient_patient_id") }}
 
-union all
+    ),
 
-SELECT * FROM {{ ref('data_quality__medication_dispensing_date') }}
+    medication_cte as (
 
-union all
+        select *
+        from {{ ref("data_quality__medication_rxnorm_code") }}
 
-SELECT * FROM {{ ref('data_quality__medication_prescribing_date') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_source_code") }}
 
-SELECT * FROM {{ ref('data_quality__medication_days_supply') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_atc_code") }}
 
-SELECT * FROM {{ ref('data_quality__medication_strength') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_dispensing_date") }}
 
-SELECT * FROM {{ ref('data_quality__medication_patient_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_prescribing_date") }}
 
-SELECT * FROM {{ ref('data_quality__medication_rxnorm_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_days_supply") }}
 
-SELECT * FROM {{ ref('data_quality__medication_encounter_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_strength") }}
 
-SELECT * FROM {{ ref('data_quality__medication_data_source') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_patient_id") }}
 
-SELECT * FROM {{ ref('data_quality__medication_atc_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_rxnorm_description") }}
 
-SELECT * FROM {{ ref('data_quality__medication_quantity_unit') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_encounter_id") }}
 
-SELECT * FROM {{ ref('data_quality__medication_source_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_data_source") }}
 
-SELECT * FROM {{ ref('data_quality__medication_ndc_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_atc_description") }}
 
-SELECT * FROM {{ ref('data_quality__medication_medication_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_quantity_unit") }}
 
-SELECT * FROM {{ ref('data_quality__medication_source_code_type') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_source_description") }}
 
-SELECT * FROM {{ ref('data_quality__medication_ndc_description') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_ndc_code") }}
 
-SELECT * FROM {{ ref('data_quality__medication_quantity') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_medication_id") }}
 
-SELECT * FROM {{ ref('data_quality__medication_practitioner_id') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_source_code_type") }}
 
-SELECT * FROM {{ ref('data_quality__medication_route') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_ndc_description") }}
 
-SELECT * FROM {{ ref('data_quality__observation_source_code') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_quantity") }}
 
-SELECT * FROM {{ ref('data_quality__observation_normalized_reference_range_high') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_practitioner_id") }}
 
-SELECT * FROM {{ ref('data_quality__observation_source_units') }}
+        union all
 
-union all
+        select *
+        from {{ ref("data_quality__medication_route") }}
 
-SELECT * FROM {{ ref('data_quality__observation_observation_type') }}
+    ),
 
-union all
+    observation_cte as (
 
-SELECT * FROM {{ ref('data_quality__observation_normalized_code') }}
+        select *
+        from {{ ref("data_quality__observation_source_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_normalized_description') }}
+        select *
+        from {{ ref("data_quality__observation_normalized_reference_range_high") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_data_source') }}
+        select *
+        from {{ ref("data_quality__observation_source_units") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_panel_id') }}
+        select *
+        from {{ ref("data_quality__observation_observation_type") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_observation_id') }}
+        select *
+        from {{ ref("data_quality__observation_normalized_code") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_source_reference_range_low') }}
+        select *
+        from {{ ref("data_quality__observation_normalized_description") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_result') }}
+        select *
+        from {{ ref("data_quality__observation_data_source") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_source_code_type') }}
+        select *
+        from {{ ref("data_quality__observation_panel_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_normalized_reference_range_low') }}
+        select *
+        from {{ ref("data_quality__observation_observation_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_observation_date') }}
+        select *
+        from {{ ref("data_quality__observation_source_reference_range_low") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_encounter_id') }}
+        select *
+        from {{ ref("data_quality__observation_result") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_source_description') }}
+        select *
+        from {{ ref("data_quality__observation_source_code_type") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_source_reference_range_high') }}
+        select *
+        from {{ ref("data_quality__observation_normalized_reference_range_low") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_normalized_units') }}
+        select *
+        from {{ ref("data_quality__observation_observation_date") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_normalized_code_type') }}
+        select *
+        from {{ ref("data_quality__observation_encounter_id") }}
 
-union all
+        union all
 
-SELECT * FROM {{ ref('data_quality__observation_patient_id') }}
+        select *
+        from {{ ref("data_quality__observation_source_description") }}
 
-)
+        union all
 
-SELECT
+        select *
+        from {{ ref("data_quality__observation_source_reference_range_high") }}
+
+        union all
+
+        select *
+        from {{ ref("data_quality__observation_normalized_units") }}
+
+        union all
+
+        select *
+        from {{ ref("data_quality__observation_normalized_code_type") }}
+
+        union all
+
+        select *
+        from {{ ref("data_quality__observation_patient_id") }}
+
+    ),
+
+    -- combine categories into one CTE
+    unioned_cte as (
+
+        select *
+        from condition_cte
+        union all
+        select *
+        from encounter_cte
+        union all
+        select *
+        from practitioner_cte
+        union all
+        select *
+        from location_cte
+        union all
+        select *
+        from procedure_cte
+        union all
+        select *
+        from lab_result_cte
+        union all
+        select *
+        from patient_cte
+        union all
+        select *
+        from medication_cte
+        union all
+        select *
+        from observation_cte
+
+    )
+
+-- final query using dense_rank
+select
     data_source,
     cast(source_date as {{ dbt.type_string() }}) as source_date,
     table_name,
@@ -679,5 +895,6 @@ SELECT
     invalid_reason,
     field_value,
     tuva_last_run,
-    dense_rank() over (order by data_source, table_name, field_name) + 100000 as summary_sk
-FROM CTE
+    dense_rank() over (order by data_source, table_name, field_name)
+    + 100000 as summary_sk
+from unioned_cte
