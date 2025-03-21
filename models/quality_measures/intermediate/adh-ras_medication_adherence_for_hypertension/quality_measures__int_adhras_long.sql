@@ -5,7 +5,7 @@
 
 with denominator as (
 
-    select
+    select distinct
           person_id
         , performance_period_begin
         , performance_period_end
@@ -19,7 +19,7 @@ with denominator as (
 
 , numerator as (
 
-    select
+    select distinct
           person_id
         , evidence_date
         , evidence_value
@@ -29,7 +29,7 @@ with denominator as (
 
 , exclusions as (
 
-    select
+    select distinct
           person_id
         , exclusion_date
         , exclusion_reason
