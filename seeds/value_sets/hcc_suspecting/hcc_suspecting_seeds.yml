@@ -5,10 +5,10 @@ seeds:
     description: Value sets for clinical concepts.
     config:
       schema: |
-        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_hcc_suspecting{% else %}hcc_suspecting{%- endif -%}
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_value_sets{% else %}value_sets{%- endif -%}
       alias: _value_set_clinical_concepts
       tags: hcc_suspecting
-      enabled: "{{ var('hcc_suspecting_enabled',var('tuva_marts_enabled',True)) }}"
+      enabled: "{{ var('claims_enabled', var('clinical_enabled', False)) }}"
       column_types:
         concept_name: |
           {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
@@ -30,14 +30,13 @@ seeds:
 
   - name: hcc_suspecting__hcc_descriptions
     description: >
-      Disease factors by model version and risk segment. Extracted from rate 
-      announcement documents on cms.gov.
+      Disease factors by model version and risk segment. Extracted from rate  announcement documents on cms.gov.
     config:
       schema: |
-        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_hcc_suspecting{% else %}hcc_suspecting{%- endif -%}
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_value_sets{% else %}value_sets{%- endif -%}
       alias: _value_set_hcc_descriptions
       tags: hcc_suspecting
-      enabled: "{{ var('hcc_suspecting_enabled',var('tuva_marts_enabled',True)) }}"
+      enabled: "{{ var('claims_enabled', var('clinical_enabled', False)) }}"
       column_types:
         hcc_code: |
           {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
@@ -51,14 +50,13 @@ seeds:
 
   - name: hcc_suspecting__icd_10_cm_mappings
     description: >
-      ICD-10 to HCC mapping by payment year and model version. Combined and 
-      cleaned version of code files on cms.gov.
+      ICD-10 to HCC mapping by payment year and model version. Combined and  cleaned version of code files on cms.gov.
     config:
       schema: |
-        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_hcc_suspecting{% else %}hcc_suspecting{%- endif -%}
-      alias: _value_set_icd_10_cm_mappings
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_value_sets{% else %}value_sets{%- endif -%}
+      alias: _value_set_hcc_suspecting_icd_10_cm_mappings
       tags: hcc_suspecting
-      enabled: "{{ var('hcc_suspecting_enabled',var('tuva_marts_enabled',True)) }}"
+      enabled: "{{ var('claims_enabled', var('clinical_enabled', False)) }}"
       column_types:
         diagnosis_code: |
           {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
@@ -79,8 +77,9 @@ seeds:
     columns:
       - name: diagnosis_code
         description: ICD-10 diagnosis code
-        meta:
-          terminology: https://github.com/tuva-health/the_tuva_project/blob/main/seeds/terminology/terminology__icd_10_cm.csv
+        config:
+          meta:
+            terminology: https://thetuvaproject.com/terminology/icd-10-cm
       - name: cms_hcc_esrd_v21
         description: CMS-HCC ESRD version 21 code
       - name: cms_hcc_esrd_v24

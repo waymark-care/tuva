@@ -1,13 +1,9 @@
 ## Using Integration Tests
 
-#### In CLI:
-- Open project in parent folder
-- Change terminal context to integration_tests folder
-- Make sure any parent package refs are sources and models in integration_tests
-- dbt deps before building and/or running
-
-#### In Cloud:
-- In account settings > projects > project, set **project subdirectory** to `integration_tests`
-- Make sure any parent package refs are sources and models in integration_tests
-- dbt deps before building and/or running
-- If it's not working, try switching to classic ide and back 
+1. Set the project subdirectory to “integration_tests” if using dbt cloud or change directory to "integration_tests" (`cd integration_tests`) if using CLI.
+2. Configure synthetic seed loading:
+   - Set `synthetic_data_size` to `small` or `large` (`small` is the default)
+   - Set `tuva_seed_version`, `tuva_seed_versions`, and the appropriate bucket vars when testing published artifacts
+3. Run `dbt deps`.
+4. Run `dbt seed` or `dbt build` to load the package-owned synthetic data into `synthetic_data`.
+5. Run `dbt run` only after the synthetic seed tables have already been loaded.

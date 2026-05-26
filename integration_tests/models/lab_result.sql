@@ -1,15 +1,52 @@
 {{ config(
-     enabled = var('clinical_enabled',var('tuva_marts_enabled',False))
+     enabled = var('clinical_enabled', False)
  | as_bool
    )
 }}
 
-{% if var('use_synthetic_data') == true -%}
+{%- set tuva_columns -%}
+      lab_result_id
+    , person_id
+    , patient_id
+    , encounter_id
+    , accession_number
+    , source_order_type
+    , source_order_code
+    , source_order_description
+    , source_component_type
+    , source_component_code
+    , source_component_description
+    , status
+    , result
+    , result_datetime
+    , collection_datetime
+    , source_units
+    , normalized_units
+    , source_reference_range_low
+    , source_reference_range_high
+    , normalized_reference_range_low
+    , normalized_reference_range_high
+    , source_abnormal_flag
+    , normalized_abnormal_flag
+    , specimen
+    , ordering_practitioner_id
+{%- endset -%}
 
-select * from {{ ref('lab_result_seed') }}
+{# Uncomment the columns below to test extension columns passthrough feature #}
+{%- set tuva_extensions -%}
+    {# , lab_result_id as x_temp_lab_result_id #}
+    {# , person_id as x_temp_person_id #}
+    {# , source_component_type as x_temp_source_component_type #}
+    {# , source_order_type as zzz_temp_source_order_type #}
+{%- endset -%}
 
-{%- else -%}
+{%- set tuva_metadata -%}
+    , ingest_datetime
+    , data_source
+{%- endset -%}
 
-select * from {{ source('source_input', 'lab_result') }}
-
-{%- endif %}
+select
+    {{ tuva_columns }}
+    {{ tuva_extensions }}
+    {{ tuva_metadata }}
+from {{ ref('the_tuva_project', 'synthetic_data__lab_result') }}

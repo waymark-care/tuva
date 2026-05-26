@@ -1,16 +1,18 @@
 {{ config(
-    enabled = var('clinical_enabled', False)
-) }}
+    enabled = (var('enable_legacy_data_quality', false) | as_bool) and 
+              (var('clinical_enabled', false) | as_bool)
+    )
+}}
 
-SELECT
+select
       m.data_source
     , coalesce(m.recorded_date,cast('1900-01-01' as date)) as source_date
-    , 'CONDITION' AS table_name
+    , 'CONDITION' as table_name
     , 'Condition ID' as drill_down_key
-    , coalesce(condition_id, 'NULL') AS drill_down_value
-    , 'CONDITION_RANK' AS field_name
+    , coalesce(condition_id, 'NULL') as drill_down_value
+    , 'CONDITION_RANK' as field_name
     , case when m.condition_rank is not null then 'valid' else 'null' end as bucket_name
     , cast(null as {{ dbt.type_string() }}) as invalid_reason
     , cast(condition_rank as {{ dbt.type_string() }}) as field_value
-    , '{{ var('tuva_last_run')}}' as tuva_last_run
-from {{ ref('condition')}} m
+    , cast('{{ var('tuva_last_run') }}' as {{ dbt.type_timestamp() }}) as tuva_last_run
+from {{ ref('condition') }} as m

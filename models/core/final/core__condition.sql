@@ -1,26 +1,32 @@
 {{ config(
-     enabled = var('claims_enabled',var('clinical_enabled',var('tuva_marts_enabled',False)))
- | as_bool
+     enabled = (var('claims_enabled', False) | as_bool)
+            or (var('clinical_enabled', False) | as_bool)
    )
 }}
 
+{%- set tuva_extension_columns -%}
+{% if var('clinical_enabled', False) | as_bool %}
+    {{ select_extension_columns(ref('input_layer__condition')) }}
+{% endif %}
+{%- endset -%}
+
+{%- set tuva_metadata_columns -%}
+    , all_conditions.tuva_last_run
+    , all_conditions.data_source
+{%- endset -%}
 
 with all_conditions as (
-{% if var('clinical_enabled', var('tuva_marts_enabled', False)) == true
-    and var('claims_enabled', var('tuva_marts_enabled', False)) == true -%}
+{% if var('clinical_enabled', False) == true
+    and var('claims_enabled', False) == true -%}
 
-    select *
-    from {{ ref('core__stg_claims_condition') }}
-    union all
-    select *
-    from {{ ref('core__stg_clinical_condition') }}
+    {{ smart_union([ref('core__stg_claims_condition'), ref('core__stg_clinical_condition')]) }}
 
-{% elif var('clinical_enabled', var('tuva_marts_enabled',False)) == true -%}
+{% elif var('clinical_enabled', False) == true -%}
 
     select *
     from {{ ref('core__stg_clinical_condition') }}
 
-{% elif var('claims_enabled', var('tuva_marts_enabled',False)) == true -%}
+{% elif var('claims_enabled', False) == true -%}
 
     select *
     from {{ ref('core__stg_claims_condition') }}
@@ -33,6 +39,7 @@ with all_conditions as (
 {% if var('enable_normalize_engine',false) != true %}
 select
     all_conditions.condition_id
+  , all_conditions.payer
   , all_conditions.person_id
   , all_conditions.member_id
   , all_conditions.patient_id
@@ -63,22 +70,22 @@ select
       , icd9.short_description
       , snomed_ct.description) as normalized_description
   , case when coalesce(all_conditions.normalized_code, all_conditions.normalized_description) is not null then 'manual'
-         when coalesce(icd10.icd_10_cm,icd9.icd_9_cm, snomed_ct.snomed_ct) is not null then 'automatic'
+         when coalesce(icd10.icd_10_cm, icd9.icd_9_cm, snomed_ct.snomed_ct) is not null then 'automatic'
          end as mapping_method
   , all_conditions.condition_rank
   , all_conditions.present_on_admit_code
   , all_conditions.present_on_admit_description
-  , all_conditions.data_source
-  , all_conditions.tuva_last_run
+   {{ tuva_extension_columns }}
+   {{ tuva_metadata_columns }}
 from
 all_conditions
-left join {{ ref('terminology__icd_10_cm') }} icd10
+left join {{ ref('terminology__icd_10_cm') }} as icd10
     on all_conditions.source_code_type = 'icd-10-cm'
-        and replace(all_conditions.source_code,'.','') = icd10.icd_10_cm
-left join {{ ref('terminology__icd_9_cm') }} icd9
+        and replace(all_conditions.source_code, '.', '') = icd10.icd_10_cm
+left join {{ ref('terminology__icd_9_cm') }} as icd9
     on all_conditions.source_code_type = 'icd-9-cm'
-        and replace(all_conditions.source_code,'.','') = icd9.icd_9_cm
-left join {{ ref('terminology__snomed_ct') }} snomed_ct
+        and replace(all_conditions.source_code, '.', '') = icd9.icd_9_cm
+left join {{ ref('terminology__snomed_ct') }} as snomed_ct
     on all_conditions.source_code_type = 'snomed-ct'
         and all_conditions.source_code = snomed_ct.snomed_ct
 
@@ -89,6 +96,7 @@ left join {{ ref('terminology__snomed_ct') }} snomed_ct
 {% else %}
 select
     all_conditions.condition_id
+  , all_conditions.payer
   , all_conditions.person_id
   , all_conditions.member_id
   , all_conditions.patient_id
@@ -114,7 +122,7 @@ select
       , icd9.icd_9_cm
       , snomed_ct.snomed_ct
       , custom_mapped.normalized_code
-      ) as NORMALIZED_CODE
+      ) as normalized_code
   , coalesce(
         all_conditions.normalized_description
       , icd10.short_description
@@ -130,20 +138,20 @@ select
   , all_conditions.condition_rank
   , all_conditions.present_on_admit_code
   , all_conditions.present_on_admit_description
-  , all_conditions.data_source
-  , all_conditions.tuva_last_run
+    {{ tuva_extension_columns }}
+    {{ tuva_metadata_columns }}
 from
 all_conditions
-left join {{ ref('terminology__icd_10_cm') }} icd10
+left join {{ ref('terminology__icd_10_cm') }} as icd10
     on all_conditions.source_code_type = 'icd-10-cm'
         and replace(all_conditions.source_code,'.','') = icd10.icd_10_cm
-left join {{ ref('terminology__icd_9_cm') }} icd9
+left join {{ ref('terminology__icd_9_cm') }} as icd9
     on all_conditions.source_code_type = 'icd-9-cm'
         and replace(all_conditions.source_code,'.','') = icd9.icd_9_cm
-left join {{ ref('terminology__snomed_ct') }} snomed_ct
+left join {{ ref('terminology__snomed_ct') }} as snomed_ct
     on all_conditions.source_code_type = 'snomed-ct'
         and all_conditions.source_code = snomed_ct.snomed_ct
-left join {{ ref('custom_mapped') }} custom_mapped
+left join {{ ref('custom_mapped') }} as custom_mapped
     on  ( lower(all_conditions.source_code_type) = lower(custom_mapped.source_code_type)
         or ( all_conditions.source_code_type is null and custom_mapped.source_code_type is null)
         )

@@ -1,11 +1,11 @@
 {{ config(
-     enabled = var('claims_enabled',var('tuva_marts_enabled',False))
- | as_bool
+     enabled = (var('enable_legacy_data_quality', false) | as_bool)
+     and (var('claims_enabled', False) | as_bool)
    )
 }}
 
 
-    SELECT *
-    FROM {{ ref('medical_claim') }}
-    WHERE claim_type = 'institutional'
-    AND {{ substring('bill_type_code', 1, 2) }} = '11'
+    select *
+    from {{ ref('input_layer__medical_claim') }}
+    where claim_type = 'institutional'
+    and {{ substring('bill_type_code', 1, 2) }} = '11'

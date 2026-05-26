@@ -1,6 +1,6 @@
 
 {{ config(
-     enabled = var('claims_enabled',var('tuva_marts_enabled',False)) | as_bool
+     enabled = var('claims_enabled', False) | as_bool
    )
 }}
 
@@ -12,7 +12,7 @@
 
 
 with all_providers_in_claims_dataset as (
-select distinct facility_id as npi, data_source
+select distinct facility_npi as npi
 from {{ ref('core__stg_claims_medical_claim') }}
 
 {% if target.type == 'fabric' %}
@@ -21,7 +21,7 @@ union
 union distinct
 {% endif %}
 
-select distinct rendering_id as npi, data_source
+select distinct rendering_npi as npi
 from {{ ref('core__stg_claims_medical_claim') }}
 
 {% if target.type == 'fabric' %}
@@ -30,7 +30,7 @@ union
 union distinct
 {% endif %}
 
-select distinct billing_id as npi, data_source
+select distinct billing_npi as npi
 from {{ ref('core__stg_claims_medical_claim') }}
 
 {% if target.type == 'fabric' %}
@@ -39,7 +39,7 @@ union
 union distinct
 {% endif %}
 
-select distinct prescribing_provider_id as npi, data_source
+select distinct prescribing_provider_id as npi
 from {{ ref('core__stg_claims_pharmacy_claim') }}
 
 {% if target.type == 'fabric' %}
@@ -48,29 +48,29 @@ union
 union distinct
 {% endif %}
 
-select distinct dispensing_provider_id as npi, data_source
+select distinct dispensing_provider_id as npi
 from {{ ref('core__stg_claims_pharmacy_claim') }}
-),
+)
 
 
-provider as (
-select aa.*, bb.data_source
-from {{ ref('terminology__provider') }} aa
-inner join all_providers_in_claims_dataset bb
+, provider as (
+select aa.*
+from {{ ref('provider_data__provider') }} as aa
+inner join all_providers_in_claims_dataset as bb
 on aa.npi = bb.npi
 where lower(aa.entity_type_description) = 'individual'
 )
 
 
 
-select 
-    cast(npi as {{ dbt.type_string() }} ) as practitioner_id
-    , cast(npi as {{ dbt.type_string() }} ) as npi
-    , cast(provider_first_name as {{ dbt.type_string() }} ) as provider_first_name
-    , cast(provider_last_name as {{ dbt.type_string() }} ) as provider_last_name
-    , cast(parent_organization_name as {{ dbt.type_string() }} ) as practice_affiliation
-    , cast(primary_specialty_description as {{ dbt.type_string() }} ) as specialty
-    , cast(null as {{ dbt.type_string() }} ) as sub_specialty
-    , cast(data_source as {{ dbt.type_string() }} ) as data_source
-    , cast('{{ var('tuva_last_run')}}' as {{ dbt.type_timestamp() }} ) as tuva_last_run
+select
+    cast(npi as {{ dbt.type_string() }}) as practitioner_id
+    , cast(npi as {{ dbt.type_string() }}) as npi
+    , cast(provider_first_name as {{ dbt.type_string() }}) as first_name
+    , cast(provider_last_name as {{ dbt.type_string() }}) as last_name
+    , cast(parent_organization_name as {{ dbt.type_string() }}) as practice_affiliation
+    , cast(primary_specialty_description as {{ dbt.type_string() }}) as specialty
+    , cast(null as {{ dbt.type_string() }}) as sub_specialty
+    , cast('{{ var('tuva_last_run') }}' as {{ dbt.type_timestamp() }}) as tuva_last_run
+    , cast(null as {{ dbt.type_string() }}) as data_source
 from provider

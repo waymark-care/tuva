@@ -1,14 +1,16 @@
 {{ config(
-    enabled = var('clinical_enabled', False)
-) }}
+    enabled = (var('enable_legacy_data_quality', false) | as_bool) and 
+              (var('clinical_enabled', false) | as_bool)
+    )
+}}
 
-SELECT
+select
       m.data_source
     , coalesce(m.encounter_start_date,cast('1900-01-01' as date)) as source_date
-    , 'ENCOUNTER' AS table_name
+    , 'ENCOUNTER' as table_name
     , 'Encounter ID' as drill_down_key
-    , coalesce(encounter_id, 'NULL') AS drill_down_value
-    , 'PRIMARY_DIAGNOSIS_CODE_TYPE' AS field_name
+    , coalesce(encounter_id, 'NULL') as drill_down_value
+    , 'PRIMARY_DIAGNOSIS_CODE_TYPE' as field_name
     , case when term.code_type is not null then 'valid'
           when m.primary_diagnosis_code_type is not null then 'invalid'
           else 'null'
@@ -17,6 +19,6 @@ SELECT
           then 'Primary Diagnosis Code Type does not join to Terminology code_type table'
           else null end as invalid_reason
     , cast(primary_diagnosis_code_type as {{ dbt.type_string() }}) as field_value
-    , '{{ var('tuva_last_run')}}' as tuva_last_run
-from {{ ref('encounter')}} m
-left join {{ ref('reference_data__code_type')}} term on m.primary_diagnosis_code_type = term.code_type
+    , cast('{{ var('tuva_last_run') }}' as {{ dbt.type_timestamp() }}) as tuva_last_run
+from {{ ref('encounter') }} as m
+left outer join {{ ref('reference_data__code_type') }} as term on m.primary_diagnosis_code_type = term.code_type

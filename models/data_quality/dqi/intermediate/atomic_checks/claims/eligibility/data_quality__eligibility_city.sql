@@ -1,6 +1,8 @@
 {{ config(
-    enabled = var('claims_enabled', False)
-) }}
+    enabled = (var('enable_legacy_data_quality', false) | as_bool) and 
+              (var('claims_enabled', false) | as_bool)
+    )
+}}
 
 SELECT DISTINCT 
     m.data_source
@@ -10,7 +12,7 @@ SELECT DISTINCT
         ,coalesce(m.member_id, 'NULL') as drill_down_value
     ,'ELIGIBILITY' AS claim_type
     ,'CITY' AS field_name
-    ,case when m.race is  null then 'null'
+    ,case when m.city is  null then 'null'
                              else 'valid' end as bucket_name
     ,cast(null as {{ dbt.type_string() }}) as invalid_reason
     ,CAST(city as {{ dbt.type_string() }}) AS field_value

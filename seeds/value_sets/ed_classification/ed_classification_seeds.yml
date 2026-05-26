@@ -5,10 +5,10 @@ seeds:
     description: A mapping of ED Classifications to human-readable names
     config:
       schema: |
-        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_ed_classification{% else %}ed_classification{%- endif -%}
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_value_sets{% else %}value_sets{%- endif -%}
       alias: _value_set_categories
       tags: ed_classification
-      enabled: "{{ var('ed_classification_enabled',var('tuva_marts_enabled',True)) }}"
+      enabled: "{{ var('claims_enabled', False) }}"
       column_types:
         classification: |
           {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
@@ -32,10 +32,10 @@ seeds:
     description: A mapping of ICD-10-CM codes to CCS categories
     config:
       schema: |
-        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_ed_classification{% else %}ed_classification{%- endif -%}
-      alias: _value_set_icd_10_cm_to_ccs
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_value_sets{% else %}value_sets{%- endif -%}
+      alias: _value_set_ed_classification_icd_10_cm_to_ccs
       tags: ed_classification
-      enabled: "{{ var('ed_classification_enabled',var('tuva_marts_enabled',True)) }}"
+      enabled: "{{ var('claims_enabled', False) }}"
       column_types:
         icd_10_cm: |
           {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
@@ -48,14 +48,16 @@ seeds:
     columns:
       - name: icd_10_cm
         description: ICD-10-CM code
-        meta:
-          terminology: https://github.com/tuva-health/the_tuva_project/blob/main/seeds/terminology/terminology__icd_10_cm.csv
+        config:
+          meta:
+            terminology: https://thetuvaproject.com/terminology/icd-10-cm
       - name: description
         description: Description of the ICD-10-CM code
       - name: ccs_diagnosis_category
         description: CCS diagnosis category code
-        meta:
-          terminology: https://github.com/tuva-health/the_tuva_project/blob/main/seeds/value_sets/ed_classification/ed_classification__categories.csv
+        config:
+          meta:
+            terminology: https://thetuvaproject.com/value-sets/ed-classification
       - name: ccs_description
         description: Description of the CCS diagnosis category
 
@@ -63,10 +65,10 @@ seeds:
     description: A probabilistic mapping of ICD-9 codes to ED classification categories
     config:
       schema: |
-        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_ed_classification{% else %}ed_classification{%- endif -%}
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_value_sets{% else %}value_sets{%- endif -%}
       alias: _value_set_johnston_icd9
       tags: ed_classification
-      enabled: "{{ var('ed_classification_enabled',var('tuva_marts_enabled',True)) }}"
+      enabled: "{{ var('claims_enabled', False) }}"
       column_types:
         icd9: |
           {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
@@ -92,8 +94,9 @@ seeds:
         tests:
           - unique
           - not_null
-        meta:
-          terminology: https://github.com/tuva-health/the_tuva_project/blob/main/seeds/terminology/terminology__icd_9_cm.csv
+        config:
+          meta:
+            terminology: https://thetuvaproject.com/terminology/icd-9-cm
       - name: edcnnpa
         description: ED CNNPA category
       - name: edcnpa
@@ -115,10 +118,10 @@ seeds:
     description: A probabilistic mapping of ICD-10 codes to ED classification categories
     config:
       schema: |
-        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_ed_classification{% else %}ed_classification{%- endif -%}
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_value_sets{% else %}value_sets{%- endif -%}
       alias: _value_set_johnston_icd10
       tags: ed_classification
-      enabled: "{{ var('ed_classification_enabled',var('tuva_marts_enabled',True)) }}"
+      enabled: "{{ var('claims_enabled', False) }}"
       column_types:
         icd10: |
           {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
@@ -144,8 +147,9 @@ seeds:
         tests:
           - unique
           - not_null
-        meta:
-          terminology: https://github.com/tuva-health/the_tuva_project/blob/main/seeds/terminology/terminology__icd_10_cm.csv
+        config:
+          meta:
+            terminology: https://thetuvaproject.com/terminology/icd-10-cm
       - name: edcnnpa
         description: ED CNNPA category
       - name: edcnpa

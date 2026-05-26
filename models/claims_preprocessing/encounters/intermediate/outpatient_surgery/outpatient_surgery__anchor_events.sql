@@ -1,5 +1,5 @@
 {{ config(
-     enabled = var('claims_preprocessing_enabled',var('claims_enabled',var('tuva_marts_enabled',False))) | as_bool
+     enabled = var('claims_enabled', False) | as_bool
    )
 }}
 
@@ -13,7 +13,7 @@ with service_category as (
     service_category_2 in ('outpatient surgery') --both inst and prof anchor
 )
 
-select distinct 
+select distinct
 claim_id
-, '{{ var('tuva_last_run')}}' as tuva_last_run
+, cast('{{ var('tuva_last_run') }}' as {{ dbt.type_timestamp() }}) as tuva_last_run
 from service_category

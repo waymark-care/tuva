@@ -1,9 +1,9 @@
 {{ config(
-     enabled = var('claims_preprocessing_enabled',var('claims_enabled',var('tuva_marts_enabled',False))) | as_bool
+     enabled = var('claims_enabled', False) | as_bool
    )
 }}
 
-WITH combined_professional_services AS (
+with combined_professional_services as (
   {{ dbt_utils.union_relations(
     relations=[
       ref('service_category__acute_inpatient_professional'),
@@ -14,6 +14,7 @@ WITH combined_professional_services AS (
       ref('service_category__inpatient_hospice_professional'),
       ref('service_category__inpatient_psychiatric_professional'),
       ref('service_category__inpatient_rehab_professional'),
+      ref('service_category__inpatient_substance_use_professional'),
       ref('service_category__lab_professional'),
       ref('service_category__office_based_other_professional'),
       ref('service_category__office_based_physical_therapy_professional'),
@@ -39,13 +40,14 @@ WITH combined_professional_services AS (
   ) }}
 )
 
-SELECT
-    p.claim_id,
-    p.claim_line_number,
-    p.claim_line_id,
-    p.service_category_1,
-    p.service_category_2,
-    p.service_category_3,
-    p.tuva_last_run,
-    p.source_model_name
-FROM combined_professional_services p
+select
+    p.claim_id
+    , p.claim_line_number
+    , p.data_source
+    , p.claim_line_id
+    , p.service_category_1
+    , p.service_category_2
+    , p.service_category_3
+    , p.tuva_last_run
+    , p.source_model_name
+from combined_professional_services as p

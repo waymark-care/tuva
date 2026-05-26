@@ -1,46 +1,132 @@
-[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![dbt logo and version](https://img.shields.io/static/v1?logo=dbt&label=dbt-version&message=1.2.x&color=orange)
+[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![dbt logo and version](https://img.shields.io/static/v1?logo=dbt&label=dbt-version&message=1.10%2B&color=orange)
 
-![diagram](./the_tuva_project.jpg)
+![Tuva Project Overview](./docs/static/img/tuva_project_overview_from_downloads.jpg)
 
-## 🧰  What is the Tuva Project?
-The Tuva Project code base includes a core data model, data marts, terminology 
-sets, and data quality tests for doing healthcare analytics.
+## What is the Tuva Project?
 
-**Explore the project:**
+The Tuva Project is a dbt package for transforming raw healthcare data into analytics-ready data. The package includes:
 
-- [Code](./models)
-- [Terminology Sets](seeds/terminology)*
-- [Value Sets](seeds/value_sets)
-- [Data Dictionaries / DAG](https://tuva-health.github.io/tuva/#!/overview/)
-- [Knowledge Base](https://thetuvaproject.com/)
+- Input Layer
+- Claims Preprocessing
+- Core Data Model
+- Data Marts
+- Terminology and Value Sets
 
-*Note: In many cases the actual terminology sets are too large to maintain on 
-GitHub, so we host them in a public AWS S3 bucket. Executing dbt build will 
-load the terminology sets from S3.
+## Docs
 
-Check out our Quickstart guide [here](./QUICKSTART.md).
-<br/><br/>
+- [Getting Started](https://www.thetuvaproject.com/getting-started)
+- [dbt Variables](https://www.thetuvaproject.com/dbt-variables)
+- [Full Documentation](https://www.thetuvaproject.com/)
 
-## 🔌  Supported Data Warehouses and dbt Versions
-- BigQuery
-- Databricks (community supported)
-- DuckDB (community supported)
-- Redshift
-- Snowflake
+The docs source for the getting-started runbook lives in [docs/docs/getting-started.md](./docs/docs/getting-started.md).
 
+## Local Development
 
-This package supports dbt version `1.3.x` or higher.
-<br/><br/>
+Recommended local setup:
 
-## 🙋🏻‍♀️ Contributing
-We created the Tuva Project to be a place where healthcare data practitioners 
-can share their knowledge about doing healthcare analytics.  If you have ideas 
-for improvements or find bugs, we highly encourage and welcome feedback! Feel 
-free to create an issue or ping us on Slack. 
+- Python 3.10 or later
+- DuckDB
+- `dbt-core` and `dbt-duckdb`
 
-Check out our Contribution guide [here](./CONTRIBUTING.md).
-<br/><br/>
+Use `integration_tests` as your development project. Configure a DuckDB connection in `profiles.yml`, then run from the repo root:
 
-## 🤝 Community
-Join our growing community of healthcare data people in [Slack](https://join.slack.com/t/thetuvaproject/shared_invite/zt-16iz61187-G522Mc2WGA2mHF57e0il0Q)!
-<br/><br/>
+```bash
+./scripts/dbt-local deps
+./scripts/dbt-local build --full-refresh
+```
+
+`dbt seed` and `dbt build` load package-owned synthetic data into `synthetic_data` from versioned S3 artifacts. `dbt run` assumes those relations already exist, so on a fresh database you should run `seed` or `build` first.
+
+Once the synthetic data is loaded, iterate with:
+
+```bash
+./scripts/dbt-local run
+```
+
+## Agentic Workflow
+
+If you are using coding agents in this repo, the local workflow guidance lives in [AGENTS.md](AGENTS.md).
+
+## dbt Variables
+
+Set Tuva vars under the `vars:` key in your `dbt_project.yml`. Use dbt selectors to run individual marts; the vars below control broad data domains, shared runtime behavior, and the synthetic bootstrap flow used by `integration_tests`.
+
+### Broad Enablement
+
+| Variable | Root Default | `integration_tests` Default | Description |
+|----------|--------------|-----------------------------|-------------|
+| `claims_enabled` | `false` | `true` | Enable claims-based models. |
+| `clinical_enabled` | `false` | `true` | Enable clinical-based models. |
+| `provider_attribution_enabled` | `false` | `true` | Enable provider attribution models. Claims input must also be enabled. |
+| `semantic_layer_enabled` | `false` | `true` | Enable semantic-layer models. Claims-dependent semantic models also require `claims_enabled`. |
+| `fhir_preprocessing_enabled` | `false` | `false` | Enable FHIR preprocessing models. |
+
+### Shared Runtime Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `tuva_last_run` | Current UTC timestamp | Populates the `tuva_last_run` column in output models. |
+| `tuva_schema_prefix` | unset | Prefixes output schemas, for example `myprefix_core`. |
+| `cms_hcc_payment_year` | Current year | CMS-HCC payment year used for risk scoring. |
+| `quality_measures_period_end` | Current year-end | Optional reporting-period end date for quality measures. |
+| `record_type` | `"ip"` | CCSR record type: `"ip"` for inpatient or `"op"` for outpatient. |
+| `dxccsr_version` | `"2023.1"` | CCSR diagnosis mapping version. |
+| `prccsr_version` | `"2023.1"` | CCSR procedure mapping version. |
+| `provider_attribution_as_of_date` | unset | Optional `YYYY-MM-DD` override for provider attribution current-state calculations. |
+
+### Seed And Feature Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `custom_bucket_name` | `"tuva-public-resources"` | Default bucket for versioned Tuva seed artifacts. |
+| `tuva_seed_version` | `"1.0.0"` | Default versioned seed folder used when no per-database override is provided. Leading `v` is optional. |
+| `tuva_seed_versions` | `{concept_library: "1.0.1", reference_data: "1.0.0", terminology: "1.1.1", value_sets: "1.0.0", provider_data: "1.0.0", synthetic_data: "1.1.0"}` | Optional per-database version overrides keyed by `concept_library`, `reference_data`, `terminology`, `value_sets`, `provider_data`, or `synthetic_data`. |
+| `tuva_seed_buckets` | `{}` | Optional per-database bucket overrides for `concept_library`, `reference_data`, `terminology`, `value_sets`, `provider_data`, or `synthetic_data`. |
+| `synthetic_data_size` | `small` in `integration_tests` | Selects the `small` or `large` synthetic input payload when running `integration_tests`. |
+| `enable_input_layer_testing` | `true` | Runs DQI checks on the input layer. |
+| `enable_legacy_data_quality` | `false` | Builds the legacy pre-DQI data-quality models. |
+| `enable_normalize_engine` | `false` | Set to `unmapped` to surface unmapped code models, or `true` to also use custom mappings. |
+
+See the maintained docs reference at [thetuvaproject.com/dbt-variables](https://www.thetuvaproject.com/dbt-variables) for examples and more detail.
+
+## Publishing Versioned Seed Artifacts
+
+Use `scripts/publish-dolthub-seeds` to publish the latest public DoltHub databases to versioned S3 folders.
+
+Required inputs:
+- `--version v1.0.0`
+- AWS CLI credentials via `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+
+Optional inputs:
+- `--bucket reference_data=my-bucket`
+- `--bucket value_sets=my-other-bucket/prefix`
+- `--database terminology`
+- `--download-only`
+
+The script publishes to the normalized layout:
+- `s3://<bucket>/<database-folder>/<version>/<table>.csv.gz`
+
+## Mirroring Seed Releases To GCS And Azure
+
+Use `scripts/mirror-seed-release` after an S3 publish to copy the same versioned release to GCS and Azure Blob Storage.
+
+Required access:
+- AWS CLI access to read `s3://tuva-public-resources`
+- `gsutil` access to write `gs://tuva-public-resources`
+- Azure `Storage Blob Data Contributor` or equivalent on storage account `tuvapublicresources`, container `tuva-public-resources`
+
+Example:
+
+```bash
+scripts/mirror-seed-release --version v1.0.0
+```
+
+The script mirrors:
+- `s3://tuva-public-resources/<database-folder>/<version>/...`
+- `gs://tuva-public-resources/<database-folder>/<version>/...`
+- `https://tuvapublicresources.blob.core.windows.net/tuva-public-resources/<database-folder>/<version>/...`
+
+Current published defaults:
+- `concept-library` uses `1.0.1`
+- `terminology` uses `1.1.1`
+- `reference-data`, `value-sets`, `provider-data`, and `synthetic-data` use `1.0.0`

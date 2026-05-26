@@ -1,5 +1,6 @@
 {{ config(
-    enabled = var('claims_enabled', var('tuva_marts_enabled', False)) | as_bool
+    enabled = (var('enable_legacy_data_quality', false) | as_bool)
+     and (var('claims_enabled', False) | as_bool)
 ) }}
 
 with cte as (
@@ -13,17 +14,17 @@ with cte as (
 , final as (
     select
         e.*
-      , {{ dbt.concat(['e.person_id', "'|'", 'e.data_source']) }} as patient_source_key
-      , {{ dbt.concat(['e.encounter_id', "'|'", 'e.data_source']) }} as encounter_source_key
-      , {{ dbt.concat(['e.ms_drg_code', "'|'", 'e.ms_drg_description']) }} as drgwithdescription
-      , {{ dbt.concat(['e.primary_diagnosis_code', "'|'", 'e.primary_diagnosis_description']) }} as primary_diagnosis_and_description
-      , {{ dbt.concat(['e.admit_source_code', "'|'", 'e.admit_source_description']) }} as admit_source_code_and_description
-      , {{ dbt.concat(['e.admit_type_code', "'|'", 'e.admit_type_description']) }} as admit_type_code_and_description
-      , {{ dbt.concat(['e.discharge_disposition_code', "'|'", 'e.discharge_disposition_description']) }} as discharge_code_and_description
+      , {{ concat_custom(['e.person_id', "'|'", 'e.data_source']) }} as patient_source_key
+      , {{ concat_custom(['e.encounter_id', "'|'", 'e.data_source']) }} as encounter_source_key
+      , {{ concat_custom(['e.drg_code', "'|'", 'e.drg_description']) }} as drgwithdescription
+      , {{ concat_custom(['e.primary_diagnosis_code', "'|'", 'e.primary_diagnosis_description']) }} as primary_diagnosis_and_description
+      , {{ concat_custom(['e.admit_source_code', "'|'", 'e.admit_source_description']) }} as admit_source_code_and_description
+      , {{ concat_custom(['e.admit_type_code', "'|'", 'e.admit_type_description']) }} as admit_type_code_and_description
+      , {{ concat_custom(['e.discharge_disposition_code', "'|'", 'e.discharge_disposition_description']) }} as discharge_code_and_description
       , p.ccsr_parent_category
       , p.ccsr_category
       , p.ccsr_category_description
-      , {{ dbt.concat(['p.ccsr_category', "'|'", 'p.ccsr_category_description']) }} as ccsr_category_and_description
+      , {{ concat_custom(['p.ccsr_category', "'|'", 'p.ccsr_category_description']) }} as ccsr_category_and_description
       , b.body_system
       , case 
             when e.length_of_stay <= 1 then '1. 0-1 day'
@@ -36,15 +37,15 @@ with cte as (
         end as los_groups
       , weights.drg_weight
     from {{ ref('core__encounter') }} as e
-    left join cte as l
-      on e.facility_id = l.location_id
-    left join {{ ref('ccsr__dx_vertical_pivot') }} as p
+    left outer join cte as l
+      on e.facility_npi = l.location_id
+    left outer join {{ ref('ccsr__dx_vertical_pivot') }} as p
       on e.primary_diagnosis_code = p.code
       and p.ccsr_category_rank = 1
-    left join {{ ref('ccsr__dxccsr_v2023_1_body_systems') }} as b
+    left outer join {{ ref('ccsr__dxccsr_v2023_1_body_systems') }} as b
       on p.ccsr_parent_category = b.ccsr_parent_category
-    left join {{ ref('terminology__ms_drg_weights_los')}} as weights
-      on e.ms_drg_code = weights.ms_drg
+    left outer join {{ ref('terminology__ms_drg_weights_los') }} as weights
+      on e.drg_code = weights.ms_drg and {{ date_part('year', 'e.encounter_start_date') }} = cast (weights.fiscal_year as {{ dbt.type_numeric() }})
     where e.encounter_type = 'acute inpatient'
 )
 

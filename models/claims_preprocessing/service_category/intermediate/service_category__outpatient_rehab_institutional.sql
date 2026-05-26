@@ -1,19 +1,21 @@
 {{ config(
-     enabled = var('claims_preprocessing_enabled', var('claims_enabled', var('tuva_marts_enabled', False))) | as_bool
+     enabled = var('claims_enabled', False) | as_bool
    )
 }}
 
 with multiple_sources as (
-    select distinct 
+    select distinct
         m.claim_id
+      , m.data_source
       , 'outpatient rehabilitation' as service_category_2
       , 'outpatient rehabilitation' as service_category_3
       , '{{ this.name }}' as source_model_name
-      , '{{ var('tuva_last_run') }}' as tuva_last_run
+      , cast('{{ var('tuva_last_run') }}' as {{ dbt.type_timestamp() }}) as tuva_last_run
     from {{ ref('service_category__stg_medical_claim') }} as m
     inner join {{ ref('service_category__stg_outpatient_institutional') }} as i
       on m.claim_id = i.claim_id
-    where 
+      and m.data_source = i.data_source
+    where
       m.primary_taxonomy_code in (
           '283X00000X'
         , '273Y00000X'
@@ -32,6 +34,7 @@ with multiple_sources as (
 
 select distinct
     claim_id
+  , data_source
   , 'outpatient' as service_category_1
   , service_category_2
   , service_category_3

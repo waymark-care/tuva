@@ -1,16 +1,74 @@
 {{ config(
-     enabled = var('claims_enabled',var('tuva_marts_enabled',False))
+     enabled = var('claims_enabled', False)
  | as_bool
    )
 }}
 
+{%- set tuva_columns -%}
+      person_id
+    , member_id
+    , subscriber_id
+    , subscriber_relation
+    , enrollment_start_date
+    , enrollment_end_date
+    , payer
+    , payer_type
+    , {{ the_tuva_project.quote_column('plan') }}
+    , first_name
+    , middle_name
+    , last_name
+    , name_suffix
+    , social_security_number
+    , address
+    , city
+    , state
+    , zip_code
+    , phone
+    , email
+    , ethnicity
+    , gender
+    , race
+    , birth_date
+    , death_date
+    , death_flag
+    , original_reason_entitlement_code
+    , dual_status_code
+    , medicare_status_code
+    , enrollment_status
+    , hospice_flag
+    , cast(case when upper(coalesce(snp_type, '')) = 'I-SNP' then 1 else 0 end as {{ dbt.type_int() }}) as institutional_snp_flag
+    , medicaid_indicator
+    , long_term_institutional_flag
+    , part_d_raf_type
+    , low_income_subsidy_indicator
+    , metal_level
+    , csr_indicator
+    , enrollment_duration_months
+    , esrd_status
+    , transplant_duration_months
+    , group_id
+    , group_name
+{%- endset -%}
 
-{% if var('use_synthetic_data') == true -%}
+{# Extension columns for testing passthrough to core.member_months #}
+{%- set tuva_extensions -%}
+    , {{ dbt.concat([
+        "'claims_'",
+        "cast(person_id as " ~ dbt.type_string() ~ ")"
+    ]) }} as x_temp_record_origin
+    , person_id as x_temp_person_id
+    , first_name as x_temp_first_name
+{%- endset -%}
 
-select * from {{ ref('eligibility_seed') }}
+{%- set tuva_metadata -%}
+    , file_date
+    , file_name
+    , ingest_datetime
+    , data_source
+{%- endset -%}
 
-{%- else -%}
-
-select * from {{ source('source_input', 'eligibility') }}
-
-{%- endif %}
+select
+    {{ tuva_columns }}
+    {{ tuva_extensions }}
+    {{ tuva_metadata }}
+from {{ ref('the_tuva_project', 'synthetic_data__eligibility') }}

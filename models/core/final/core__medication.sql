@@ -1,9 +1,17 @@
 {{ config(
-     enabled = var('clinical_enabled',var('tuva_marts_enabled',False))
+     enabled = var('clinical_enabled', False)
  | as_bool
    )
 }}
 
+{%- set tuva_extension_columns -%}
+    {{ select_extension_columns(ref('input_layer__medication'), strip_prefix=false) }}
+{%- endset -%}
+
+{%- set tuva_metadata_columns -%}
+   , tuva_last_run
+   , data_source
+{%- endset -%}
 
 with source_mapping as (
 {% if var('enable_normalize_engine',false) != true %}
@@ -21,9 +29,8 @@ with source_mapping as (
        meds.ndc_code
        , ndc.ndc
        ) as ndc_code
-   ,  coalesce(
-       meds.ndc_description
-       , ndc.fda_description
+   , coalesce(
+       ndc.fda_description
        , ndc.rxnorm_description
        ) as ndc_description
    , case
@@ -34,10 +41,7 @@ with source_mapping as (
         meds.rxnorm_code
         , rxatc.rxcui
         ) as rxnorm_code
-   , coalesce(
-       meds.rxnorm_description
-       , rxatc.rxnorm_description
-       ) as rxnorm_description
+   , rxatc.rxnorm_description as rxnorm_description
    , case
         when meds.rxnorm_code is not null then 'manual'
         when rxatc.rxcui is not null then 'automatic'
@@ -46,10 +50,7 @@ with source_mapping as (
         meds.atc_code
         , rxatc.atc_3_code
         ) as atc_code
-   , coalesce(
-        meds.atc_description
-        , rxatc.atc_4_name
-        ) as atc_description
+   , rxatc.atc_4_name as atc_description
    , case
         when meds.atc_code is not null then 'manual'
         when rxatc.atc_3_name is not null then 'automatic'
@@ -62,11 +63,12 @@ with source_mapping as (
    , meds.practitioner_id
    , meds.data_source
    , meds.tuva_last_run
-from {{ ref('core__stg_clinical_medication')}} meds
-    left join {{ref('terminology__ndc')}} ndc
+   {{ tuva_extension_columns }}
+from {{ ref('core__stg_clinical_medication') }} as meds
+    left outer join {{ ref('terminology__ndc') }} as ndc
         on meds.source_code_type = 'ndc'
         and meds.source_code = ndc.ndc
-    left join {{ref('terminology__rxnorm_to_atc')}} rxatc
+    left outer join {{ ref('terminology__rxnorm_to_atc') }} as rxatc
         on meds.source_code_type = 'rxnorm'
         and meds.source_code = rxatc.rxcui
 
@@ -89,8 +91,7 @@ from {{ ref('core__stg_clinical_medication')}} meds
         , custom_mapped_ndc.normalized_code
         ) as ndc_code
    , coalesce(
-        meds.ndc_description
-        , ndc.fda_description
+        ndc.fda_description
         , ndc.rxnorm_description
         , custom_mapped_ndc.normalized_description
         ) as ndc_description
@@ -106,8 +107,7 @@ from {{ ref('core__stg_clinical_medication')}} meds
         , custom_mapped_rxnorm.normalized_code
         ) as rxnorm_code
    , coalesce(
-        meds.rxnorm_code
-        , rxatc.rxnorm_description
+        rxatc.rxnorm_description
         , custom_mapped_rxnorm.normalized_description
         ) as rxnorm_description
    , case
@@ -122,8 +122,7 @@ from {{ ref('core__stg_clinical_medication')}} meds
         , custom_mapped_atc.normalized_code
         ) as atc_code
    , coalesce(
-        meds.atc_description
-        , rxatc.atc_3_name
+        rxatc.atc_3_name
         , custom_mapped_atc.normalized_description
         ) as atc_description
    , case
@@ -140,11 +139,12 @@ from {{ ref('core__stg_clinical_medication')}} meds
    , meds.practitioner_id
    , meds.data_source
    , meds.tuva_last_run
-from {{ ref('core__stg_clinical_medication')}} meds
-    left join {{ref('terminology__ndc')}} ndc
+   {{ tuva_extension_columns }}
+from {{ ref('core__stg_clinical_medication') }} meds
+    left join {{ ref('terminology__ndc') }} ndc
         on meds.source_code_type = 'ndc'
         and meds.source_code = ndc.ndc
-    left join {{ref('terminology__rxnorm_to_atc')}} rxatc
+    left join {{ ref('terminology__rxnorm_to_atc') }} rxatc
         on meds.source_code_type = 'rxnorm'
         and meds.source_code = rxatc.rxcui
     left join {{ ref('custom_mapped') }} custom_mapped_ndc
@@ -191,6 +191,7 @@ from {{ ref('core__stg_clinical_medication')}} meds
 select
      sm.medication_id
    , sm.person_id
+   , sm.patient_id
    , sm.encounter_id
    , sm.dispensing_date
    , sm.prescribing_date
@@ -198,7 +199,11 @@ select
    , sm.source_code
    , sm.source_description
    , sm.ndc_code
-   , sm.ndc_description
+   , coalesce(
+        sm.ndc_description
+        , ndc.fda_description
+        , ndc.rxnorm_description
+        ) as ndc_description
    , sm.ndc_mapping_method
    , coalesce(
         sm.rxnorm_code
@@ -207,6 +212,7 @@ select
    , coalesce(
         sm.rxnorm_description
         , ndc.rxnorm_description
+        , rxatc.rxnorm_description
         ) as rxnorm_description
    , case
         when sm.rxnorm_mapping_method is not null then sm.rxnorm_mapping_method
@@ -230,10 +236,10 @@ select
    , sm.quantity_unit
    , sm.days_supply
    , sm.practitioner_id
-   , sm.data_source
-   , sm.tuva_last_run
-from source_mapping sm
-    left join {{ref('terminology__ndc')}} ndc
+   {{ select_extension_columns(ref('input_layer__medication'), alias='sm') }}
+   {{ tuva_metadata_columns }}
+from source_mapping as sm
+    left outer join {{ ref('terminology__ndc') }} as ndc
         on sm.ndc_code = ndc.ndc
-    left join {{ref('terminology__rxnorm_to_atc')}} rxatc
-        on coalesce( sm.rxnorm_code, ndc.rxcui ) = rxatc.rxcui
+    left outer join {{ ref('terminology__rxnorm_to_atc') }} as rxatc
+        on coalesce(sm.rxnorm_code, ndc.rxcui) = rxatc.rxcui
