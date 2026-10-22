@@ -98,19 +98,19 @@ seeds:
       terminology__gender:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','gender.csv',compression=true,null_marker=true) }}"
       terminology__hcpcs_level_2:
-        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','hcpcs_level_2.csv',compression=true,null_marker=true) }}"
+        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.16.0','hcpcs_level_2.csv',compression=true,null_marker=true) }}"
       terminology__hcpcs_to_rbcs:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','hcpcs_to_rbcs.csv',compression=true,null_marker=true) }}"
       terminology__icd_10_cm:
-        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','icd_10_cm.csv',compression=true,null_marker=true) }}"
+        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.16.0','icd_10_cm.csv',compression=true,null_marker=true) }}"
       terminology__icd_10_pcs:
-        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','icd_10_pcs.csv',compression=true,null_marker=true) }}"
+        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.16.0','icd_10_pcs.csv',compression=true,null_marker=true) }}"
       terminology__icd_9_cm:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','icd_9_cm.csv',compression=true,null_marker=true) }}"
       terminology__icd_9_pcs:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','icd_9_pcs.csv',compression=true,null_marker=true) }}"
       terminology__loinc:
-        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','loinc.csv',compression=true,null_marker=true) }}"
+        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.16.0','loinc.csv',compression=true,null_marker=true) }}"
       terminology__loinc_deprecated_mapping:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','loinc_deprecated_mapping.csv',compression=true,null_marker=true) }}"
       terminology__mdc:
@@ -126,7 +126,7 @@ seeds:
       terminology__ms_drg:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','ms_drg.csv',compression=true,null_marker=true) }}"
       terminology__ndc:
-        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','ndc.csv',compression=true,null_marker=true) }}"
+        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.16.0','ndc.csv',compression=true,null_marker=true) }}"
       terminology__nitos:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','nitos.csv',compression=true,null_marker=true) }}"
       terminology__other_provider_taxonomy:
@@ -144,7 +144,7 @@ seeds:
       terminology__revenue_center:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','revenue_center.csv',compression=true,null_marker=true) }}"
       terminology__rxnorm_to_atc:
-        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','rxnorm_to_atc.csv',compression=true,null_marker=true) }}"
+        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.16.0','rxnorm_to_atc.csv',compression=true,null_marker=true) }}"
       terminology__rxnorm_brand_generic:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','rxnorm_brand_generic.csv',compression=true,null_marker=true) }}"
       terminology__snomed_ct:
