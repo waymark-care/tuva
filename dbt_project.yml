@@ -126,7 +126,10 @@ seeds:
       terminology__ms_drg:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','ms_drg.csv',compression=true,null_marker=true) }}"
       terminology__ndc:
-        +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','ndc.csv',compression=true,null_marker=true) }}"
+        +post-hook:
+          - "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.16.0','ndc.csv',compression=true,null_marker=true) }}"
+          # Waymark: Tuva's public file quotes the null marker ("\N"), which the Postgres S3 import loads as literal text; Redshift treats it as null
+          - "{% if target.type == 'postgres' %}update {{ this }} set rxcui = nullif(rxcui, chr(92) || 'N'), rxnorm_description = nullif(rxnorm_description, chr(92) || 'N'), fda_description = nullif(fda_description, chr(92) || 'N'){% else %}select 1{% endif %}"
       terminology__nitos:
         +post-hook: "{{ load_seed(var('custom_bucket_name','tuva-public-resources') ~ '/versioned_terminology/0.13.0','nitos.csv',compression=true,null_marker=true) }}"
       terminology__other_provider_taxonomy:
